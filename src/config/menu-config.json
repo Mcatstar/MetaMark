@@ -1,0 +1,233 @@
+[
+  {
+    "id": "file",
+    "label": "文件",
+    "shortcut_key": "F",
+    "items": [
+      { "id": "file_new", "label": "新建", "shortcut": "Ctrl+N", "action": "file_new" },
+      { "id": "file_new_window", "label": "新建窗口", "shortcut": "Ctrl+Shift+N", "action": "file_new_window" },
+      { "id": "file_sep1", "separator": true },
+      { "id": "file_open", "label": "打开...", "shortcut": "Ctrl+O", "action": "file_open" },
+      { "id": "file_open_folder", "label": "打开文件夹...", "action": "file_open_folder" },
+      { "id": "file_quick_open", "label": "快速打开...", "shortcut": "Ctrl+P", "action": "file_quick_open" },
+      {
+        "id": "file_recent", "label": "打开最近文件", "children": [
+          { "id": "file_recent_none", "label": "无最近文件", "disabled": true }
+        ]
+      },
+      { "id": "file_sep2", "separator": true },
+      { "id": "file_save", "label": "保存", "shortcut": "Ctrl+S", "action": "file_save" },
+      { "id": "file_save_as", "label": "另存为...", "shortcut": "Ctrl+Shift+S", "action": "file_save_as" },
+      { "id": "file_move_to", "label": "移动到...", "action": "file_move_to" },
+      { "id": "file_save_all", "label": "保存全部打开的文件...", "action": "file_save_all" },
+      { "id": "file_sep3", "separator": true },
+      { "id": "file_properties", "label": "属性...", "action": "file_properties" },
+      { "id": "file_open_location", "label": "打开文件位置...", "action": "file_open_location" },
+      { "id": "file_show_sidebar", "label": "在侧边栏中显示", "action": "file_show_sidebar" },
+      { "id": "file_delete", "label": "删除...", "action": "file_delete" },
+      { "id": "file_sep4", "separator": true },
+      { "id": "file_import", "label": "导入...", "action": "file_import" },
+      {
+        "id": "file_export", "label": "导出", "children": [
+          { "id": "file_export_pdf", "label": "PDF", "action": "file_export_pdf" },
+          { "id": "file_export_html", "label": "HTML", "action": "file_export_html" },
+          { "id": "file_export_word", "label": "Word", "action": "file_export_word" },
+          { "id": "file_export_image", "label": "图片", "action": "file_export_image" },
+          { "id": "file_export_md", "label": "纯 Markdown", "action": "file_export_md" }
+        ]
+      },
+      { "id": "file_sep5", "separator": true },
+      { "id": "file_print", "label": "打印...", "shortcut": "Alt+Shift+P", "action": "file_print" },
+      { "id": "file_sep6", "separator": true },
+      { "id": "file_preferences", "label": "偏好设置...", "shortcut": "Ctrl+,", "action": "file_preferences" }
+    ]
+  },
+  {
+    "id": "edit",
+    "label": "编辑",
+    "shortcut_key": "E",
+    "items": [
+      { "id": "edit_undo", "label": "撤销", "shortcut": "Ctrl+Z", "action": "edit_undo" },
+      { "id": "edit_redo", "label": "重做", "shortcut": "Ctrl+Y", "action": "edit_redo" },
+      { "id": "edit_sep1", "separator": true },
+      { "id": "edit_cut", "label": "剪切", "shortcut": "Ctrl+X", "action": "edit_cut" },
+      { "id": "edit_copy", "label": "复制", "shortcut": "Ctrl+C", "action": "edit_copy" },
+      { "id": "edit_copy_image", "label": "拷贝图片", "action": "edit_copy_image" },
+      { "id": "edit_paste", "label": "粘贴", "shortcut": "Ctrl+V", "action": "edit_paste" },
+      { "id": "edit_sep2", "separator": true },
+      { "id": "edit_copy_plain", "label": "复制为纯文本", "action": "edit_copy_plain" },
+      { "id": "edit_copy_md", "label": "复制为 Markdown", "shortcut": "Ctrl+Shift+C", "action": "edit_copy_md" },
+      { "id": "edit_copy_html", "label": "复制为 HTML 代码", "action": "edit_copy_html" },
+      { "id": "edit_copy_simple", "label": "复制内容并简化格式", "action": "edit_copy_simple" },
+      { "id": "edit_sep3", "separator": true },
+      { "id": "edit_paste_plain", "label": "粘贴为纯文本", "shortcut": "Ctrl+Shift+V", "action": "edit_paste_plain" },
+      { "id": "edit_sep4", "separator": true },
+      { "id": "edit_select", "label": "选择", "children": [
+        { "id": "edit_select_all", "label": "全选", "shortcut": "Ctrl+A", "action": "edit_select_all" },
+        { "id": "edit_select_line", "label": "选择当前行", "action": "edit_select_line" },
+        { "id": "edit_select_word", "label": "选择当前词", "action": "edit_select_word" }
+      ]},
+      { "id": "edit_sep5", "separator": true },
+      { "id": "edit_delete", "label": "删除", "action": "edit_delete" },
+      { "id": "edit_delete_range", "label": "删除范围", "children": [
+        { "id": "edit_delete_line", "label": "删除行", "action": "edit_delete_line" },
+        { "id": "edit_delete_para", "label": "删除段落", "action": "edit_delete_para" }
+      ]},
+      { "id": "edit_sep6", "separator": true },
+      { "id": "edit_math", "label": "数学工具", "children": [
+        { "id": "edit_math_inline", "label": "行内公式", "shortcut": "Ctrl+Shift+M", "action": "edit_math_inline" },
+        { "id": "edit_math_block", "label": "公式块", "action": "edit_math_block" }
+      ]},
+      { "id": "edit_punctuation", "label": "智能标点", "children": [
+        { "id": "edit_punct_quotes", "label": "智能引号", "action": "edit_punct_quotes" },
+        { "id": "edit_punct_dashes", "label": "智能破折号", "action": "edit_punct_dashes" }
+      ]}
+    ]
+  },
+  {
+    "id": "paragraph",
+    "label": "段落",
+    "shortcut_key": "P",
+    "items": [
+      { "id": "para_h1", "label": "一级标题", "shortcut": "Ctrl+1", "action": "para_h1" },
+      { "id": "para_h2", "label": "二级标题", "shortcut": "Ctrl+2", "action": "para_h2" },
+      { "id": "para_h3", "label": "三级标题", "shortcut": "Ctrl+3", "action": "para_h3" },
+      { "id": "para_h4", "label": "四级标题", "shortcut": "Ctrl+4", "action": "para_h4" },
+      { "id": "para_h5", "label": "五级标题", "shortcut": "Ctrl+5", "action": "para_h5" },
+      { "id": "para_h6", "label": "六级标题", "shortcut": "Ctrl+6", "action": "para_h6" },
+      { "id": "para_sep1", "separator": true },
+      { "id": "para_paragraph", "label": "段落", "shortcut": "Ctrl+0", "checked": true, "action": "para_paragraph" },
+      { "id": "para_sep2", "separator": true },
+      { "id": "para_heading_up", "label": "提升标题级别", "shortcut": "Ctrl+=", "action": "para_heading_up" },
+      { "id": "para_heading_down", "label": "降低标题级别", "shortcut": "Ctrl+-", "action": "para_heading_down" },
+      { "id": "para_sep3", "separator": true },
+      { "id": "para_table", "label": "表格", "children": [
+        { "id": "para_table_insert", "label": "插入表格", "action": "para_table_insert" },
+        { "id": "para_table_row_add", "label": "插入行", "action": "para_table_row_add" },
+        { "id": "para_table_col_add", "label": "插入列", "action": "para_table_col_add" },
+        { "id": "para_table_row_del", "label": "删除行", "action": "para_table_row_del" },
+        { "id": "para_table_col_del", "label": "删除列", "action": "para_table_col_del" }
+      ]},
+      { "id": "para_math_block", "label": "公式块", "shortcut": "Ctrl+Shift+M", "action": "para_math_block" },
+      { "id": "para_code_block", "label": "代码块", "shortcut": "Ctrl+Shift+K", "action": "para_code_block" },
+      { "id": "para_code_tools", "label": "代码工具", "children": [
+        { "id": "para_code_run", "label": "运行代码", "action": "para_code_run" }
+      ]},
+      { "id": "para_alert", "label": "警告框", "children": [
+        { "id": "para_alert_info", "label": "信息提示", "action": "para_alert_info" },
+        { "id": "para_alert_warn", "label": "警告提示", "action": "para_alert_warn" },
+        { "id": "para_alert_error", "label": "错误提示", "action": "para_alert_error" }
+      ]},
+      { "id": "para_sep4", "separator": true },
+      { "id": "para_quote", "label": "引用", "shortcut": "Ctrl+Shift+Q", "action": "para_quote" },
+      { "id": "para_sep5", "separator": true },
+      { "id": "para_olist", "label": "有序列表", "shortcut": "Ctrl+Shift+[", "action": "para_olist" },
+      { "id": "para_ulist", "label": "无序列表", "shortcut": "Ctrl+Shift+]", "action": "para_ulist" },
+      { "id": "para_task", "label": "任务列表", "shortcut": "Ctrl+Shift+X", "action": "para_task" }
+    ]
+  },
+  {
+    "id": "format",
+    "label": "格式",
+    "shortcut_key": "O",
+    "items": [
+      { "id": "fmt_bold", "label": "加粗", "shortcut": "Ctrl+B", "action": "fmt_bold" },
+      { "id": "fmt_italic", "label": "斜体", "shortcut": "Ctrl+I", "action": "fmt_italic" },
+      { "id": "fmt_underline", "label": "下划线", "shortcut": "Ctrl+U", "action": "fmt_underline" },
+      { "id": "fmt_code", "label": "代码", "shortcut": "Ctrl+Shift+`", "action": "fmt_code" },
+      { "id": "fmt_sep1", "separator": true },
+      { "id": "fmt_inline_math", "label": "内联公式", "action": "fmt_inline_math" },
+      { "id": "fmt_strikethrough", "label": "删除线", "shortcut": "Alt+Shift+5", "action": "fmt_strikethrough" },
+      { "id": "fmt_highlight", "label": "高亮", "action": "fmt_highlight" },
+      { "id": "fmt_superscript", "label": "上标", "action": "fmt_superscript" },
+      { "id": "fmt_subscript", "label": "下标", "action": "fmt_subscript" },
+      { "id": "fmt_comment", "label": "注释", "action": "fmt_comment" },
+      { "id": "fmt_sep2", "separator": true },
+      { "id": "fmt_link", "label": "超链接", "shortcut": "Ctrl+K", "action": "fmt_link" },
+      { "id": "fmt_link_ops", "label": "链接操作", "children": [
+        { "id": "fmt_link_open", "label": "打开链接", "action": "fmt_link_open" },
+        { "id": "fmt_link_edit", "label": "修改链接", "action": "fmt_link_edit" },
+        { "id": "fmt_link_remove", "label": "移除链接", "action": "fmt_link_remove" }
+      ]},
+      { "id": "fmt_image", "label": "图像", "children": [
+        { "id": "fmt_image_insert", "label": "插入图像", "action": "fmt_image_insert" },
+        { "id": "fmt_image_local", "label": "本地图片", "action": "fmt_image_local" }
+      ]},
+      { "id": "fmt_sep3", "separator": true },
+      { "id": "fmt_clear", "label": "清除样式", "shortcut": "Ctrl+\\", "action": "fmt_clear" }
+    ]
+  },
+  {
+    "id": "view",
+    "label": "视图",
+    "shortcut_key": "V",
+    "items": [
+      { "id": "view_sidebar", "label": "显示/隐藏侧边栏", "shortcut": "Ctrl+Shift+L", "action": "view_sidebar" },
+      { "id": "view_outline", "label": "大纲", "shortcut": "Ctrl+Shift+1", "action": "view_outline" },
+      { "id": "view_doc_list", "label": "文档列表", "shortcut": "Ctrl+Shift+2", "action": "view_doc_list" },
+      { "id": "view_file_tree", "label": "文件树", "shortcut": "Ctrl+Shift+3", "action": "view_file_tree" },
+      { "id": "view_search", "label": "搜索", "shortcut": "Ctrl+Shift+F", "action": "view_search" },
+      { "id": "view_sep1", "separator": true },
+      { "id": "view_source_mode", "label": "源代码模式", "action": "view_source_mode" },
+      { "id": "view_sep2", "separator": true },
+      { "id": "view_focus", "label": "专注模式", "action": "view_focus" },
+      { "id": "view_typewriter", "label": "打字机模式", "action": "view_typewriter" },
+      { "id": "view_sep3", "separator": true },
+      { "id": "view_status_bar", "label": "显示状态栏", "checked": true, "action": "view_status_bar" },
+      { "id": "view_word_count", "label": "字数统计窗口", "action": "view_word_count" },
+      { "id": "view_sep4", "separator": true },
+      { "id": "view_fullscreen", "label": "切换全屏", "action": "view_fullscreen" },
+      { "id": "view_always_top", "label": "保持窗口在最前端", "action": "view_always_top" },
+      { "id": "view_sep5", "separator": true },
+      { "id": "view_actual_size", "label": "实际大小", "shortcut": "Ctrl+Shift+0", "checked": true, "action": "view_actual_size" },
+      { "id": "view_zoom_in", "label": "放大", "shortcut": "Ctrl+Shift+=", "action": "view_zoom_in" },
+      { "id": "view_zoom_out", "label": "缩小", "shortcut": "Ctrl+Shift+-", "action": "view_zoom_out" },
+      { "id": "view_sep6", "separator": true },
+      { "id": "view_split_mode", "label": "分页双栏模式", "action": "view_split_mode" },
+      { "id": "view_sep7", "separator": true },
+      { "id": "view_switch_window", "label": "应用内窗口切换", "shortcut": "Ctrl+Tab", "action": "view_switch_window" },
+      { "id": "view_sep8", "separator": true },
+      { "id": "view_devtools", "label": "开发者工具", "shortcut": "Shift+I", "action": "view_devtools" }
+    ]
+  },
+  {
+    "id": "page",
+    "label": "页面",
+    "shortcut_key": "L",
+    "items": [
+      { "id": "page_size", "label": "纸张尺寸设置", "action": "page_size" },
+      { "id": "page_margins", "label": "页边距设置", "action": "page_margins" },
+      { "id": "page_sep1", "separator": true },
+      { "id": "page_toggle_break", "label": "显示/隐藏分页分割线", "action": "page_toggle_break" },
+      { "id": "page_sep2", "separator": true },
+      { "id": "page_single", "label": "单页预览", "action": "page_single" },
+      { "id": "page_double", "label": "双页并排预览", "action": "page_double" },
+      { "id": "page_sep3", "separator": true },
+      { "id": "page_reset", "label": "重置页面布局参数", "action": "page_reset" },
+      { "id": "page_sep4", "separator": true },
+      { "id": "page_print_preview", "label": "打印页面预览", "action": "page_print_preview" }
+    ]
+  },
+  {
+    "id": "theme",
+    "label": "主题",
+    "shortcut_key": "T",
+    "items": [
+      { "id": "theme_light", "label": "浅色模式", "action": "theme_light" },
+      { "id": "theme_dark", "label": "深色模式", "action": "theme_dark" },
+      { "id": "theme_sep1", "separator": true },
+      { "id": "theme_custom", "label": "自定义主题...", "action": "theme_custom" }
+    ]
+  },
+  {
+    "id": "help",
+    "label": "帮助",
+    "shortcut_key": "H",
+    "items": [
+      { "id": "help_about", "label": "关于 MetaMark", "action": "help_about" },
+      { "id": "help_docs", "label": "使用文档", "action": "help_docs" },
+      { "id": "help_sep1", "separator": true },
+      { "id": "help_version", "label": "版本 0.1.0", "disabled": true, "action": "help_version" }
+    ]
+  }
+]
