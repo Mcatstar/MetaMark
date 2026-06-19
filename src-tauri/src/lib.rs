@@ -4,58 +4,15 @@ use std::process::Command;
 use tauri::Manager;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct PageConfig {
-    pub width: f64,
-    pub height: f64,
-    pub unit: String,
-    pub margin_top: f64,
-    pub margin_bottom: f64,
-    pub margin_left: f64,
-    pub margin_right: f64,
+pub struct FileEntry {
+    pub name: String,
+    pub path: String,
+    pub is_dir: bool,
 }
 
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-#[tauri::command]
-fn export_document(content: String, format: String) -> Result<(), String> {
-    use tempfile::Builder;
-
-    let temp_dir = Builder::new()
-        .prefix("metamark_")
-        .tempdir()
-        .map_err(|e| e.to_string())?;
-    let md_path = temp_dir.path().join("input.md");
-    fs::write(&md_path, &content).map_err(|e| e.to_string())?;
-
-    let output_ext = match format.as_str() {
-        "pdf" => "pdf",
-        "html" => "html",
-        "word" | "docx" => "docx",
-        "md" => "md",
-        _ => "pdf",
-    };
-    let output_path = temp_dir.path().join(format!("output.{}", output_ext));
-
-    let mut cmd = Command::new("pandoc");
-    cmd.arg(&md_path).arg("-o").arg(&output_path);
-
-    if format == "pdf" {
-        cmd.arg("--pdf-engine=wkhtmltopdf");
-    }
-
-    let status = cmd.status().map_err(|e| format!("Pandoc not found: {}", e))?;
-
-    if !status.success() {
-        return Err("Pandoc conversion failed".into());
-    }
-
-    let data = fs::read(&output_path).map_err(|e| e.to_string())?;
-    let _data_len = data.len();
-
-    Ok(())
 }
 
 #[tauri::command]
@@ -65,6 +22,9 @@ fn read_file(path: String) -> Result<String, String> {
 
 #[tauri::command]
 fn write_file(path: String, content: String) -> Result<(), String> {
+    if let Some(parent) = std::path::Path::new(&path).parent() {
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
     fs::write(&path, &content).map_err(|e| e.to_string())
 }
 
@@ -76,6 +36,9 @@ fn list_directory(path: String) -> Result<Vec<FileEntry>, String> {
         let entry = entry.map_err(|e| e.to_string())?;
         let name = entry.file_name().to_string_lossy().to_string();
         let is_dir = entry.file_type().map_err(|e| e.to_string())?.is_dir();
+        if name.starts_with('.') {
+            continue;
+        }
         files.push(FileEntry {
             name,
             path: entry.path().to_string_lossy().to_string(),
@@ -96,11 +59,68 @@ fn delete_file(path: String) -> Result<(), String> {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct FileEntry {
-    pub name: String,
-    pub path: String,
-    pub is_dir: bool,
+fn pandoc_to_format(format: &str) -> &str {
+    match format {
+        "pdf" => "pdf",
+        "html" => "html",
+        "docx" => "docx",
+        "odt" => "odt",
+        "rtf" => "rtf",
+        "epub" => "epub",
+        "latex" => "latex",
+        "md" => "markdown",
+        _ => "html",
+    }
+}
+
+#[tauri::command]
+fn export_with_pandoc(content: String, path: String, format: String, pandoc_path: Option<String>, extra_args: Vec<String>) -> Result<(), String> {
+    use tempfile::Builder;
+    let temp_dir = Builder::new().prefix("metamark_").tempdir().map_err(|e| e.to_string())?;
+    let md_path = temp_dir.path().join("input.md");
+    fs::write(&md_path, &content).map_err(|e| e.to_string())?;
+
+    let pandoc = pandoc_path.unwrap_or_else(|| "pandoc".to_string());
+    let mut cmd = Command::new(&pandoc);
+    cmd.arg(&md_path)
+        .arg("-o")
+        .arg(&path)
+        .arg("--from")
+        .arg("markdown")
+        .arg("--to")
+        .arg(pandoc_to_format(&format));
+
+    for arg in &extra_args {
+        if !arg.trim().is_empty() {
+            cmd.arg(arg.trim());
+        }
+    }
+
+    let status = cmd.status()
+        .map_err(|e| format!("Pandoc not found at '{}': {}. Please install pandoc to export.", pandoc, e))?;
+
+    if !status.success() {
+        return Err(format!("Pandoc conversion to {} failed.", format));
+    }
+    Ok(())
+}
+
+#[tauri::command]
+async fn print_html(_html: String) -> Result<(), String> {
+    // Use Tauri's print API via JavaScript
+    Ok(())
+}
+
+#[tauri::command]
+fn get_app_info() -> serde_json::Value {
+    serde_json::json!({
+        "name": "MetaMark",
+        "version": "0.1.0",
+        "description": "A Typora-like Markdown editor built with Tauri 2",
+        "author": "MetaMark Team",
+        "tauri_version": "2.x",
+        "rust_version": "1.85+"
+    })
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -113,18 +133,18 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
-            window
-                .set_title("MetaMark - Markdown Editor")
-                .ok();
+            window.set_title("MetaMark - Markdown Editor").ok();
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             greet,
-            export_document,
             read_file,
             write_file,
             list_directory,
             delete_file,
+            export_with_pandoc,
+            print_html,
+            get_app_info,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

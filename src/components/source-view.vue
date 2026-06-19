@@ -1,24 +1,38 @@
 <template>
   <div class="source-view">
-    <textarea
-      class="source-textarea"
-      :value="editor_store.source"
-      @input="onInput"
-      spellcheck="false"
-      placeholder="在此输入 Markdown..."
-    ></textarea>
+    <MonacoEditor
+      ref="editorRef"
+      v-model="editor_store.source"
+      language="markdown"
+      :theme="editorTheme"
+      :font-size="14"
+      :word-wrap="editor_store.word_wrap ? 'on' : 'off'"
+      line-numbers="on"
+      :minimap="true"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue';
 import { useEditorStore } from '../store/editor-store';
+import { useThemeStore } from '../store/theme-store';
+import MonacoEditor from './MonacoEditor.vue';
 
 const editor_store = useEditorStore();
+const theme_store = useThemeStore();
+const editorRef = ref<InstanceType<typeof MonacoEditor> | null>(null);
 
-function onInput(e: Event) {
-  const target = e.target as HTMLTextAreaElement;
-  editor_store.set_source(target.value);
+const editorTheme = computed(() => {
+  if (theme_store.theme === 'dark' || theme_store.theme === 'custom') return 'vs-dark';
+  return 'vs';
+});
+
+function focus() {
+  editorRef.value?.focus();
 }
+
+defineExpose({ focus });
 </script>
 
 <style scoped>
@@ -26,24 +40,5 @@ function onInput(e: Event) {
   flex: 1;
   display: flex;
   overflow: hidden;
-}
-
-.source-textarea {
-  width: 100%;
-  height: 100%;
-  border: none;
-  outline: none;
-  resize: none;
-  padding: 24px 32px;
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: 14px;
-  line-height: 1.8;
-  background: #fff;
-  color: #333;
-  box-sizing: border-box;
-}
-
-.source-textarea::placeholder {
-  color: #bdbdbd;
 }
 </style>

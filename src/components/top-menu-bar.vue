@@ -14,6 +14,7 @@
           :key="item.id"
           :item="item"
           :active-submenu="activeSubmenu"
+          :checked-map="editor_store.menu_checked"
           @action="handleAction"
           @submenu="setSubmenu"
         />
@@ -27,11 +28,13 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import type { MenuGroup } from '../types';
 import menuConfig from '../config/menu-config.json';
 import MenuItem from './MenuItem.vue';
+import { useEditorStore } from '../store/editor-store';
 
 const menus = menuConfig as MenuGroup[];
 const activeMenu = ref<string | null>(null);
 const activeSubmenu = ref<string | null>(null);
 const menuBarRef = ref<HTMLElement | null>(null);
+const editor_store = useEditorStore();
 
 const emit = defineEmits<{
   'menu-action': [action: string];

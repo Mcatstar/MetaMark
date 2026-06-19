@@ -12,7 +12,7 @@
     @click.stop="onClick"
     @mouseenter="onMouseEnter"
   >
-    <span class="menu-item-check">{{ item.checked ? '✓' : '' }}</span>
+    <span class="menu-item-check">{{ isChecked ? '✓' : '' }}</span>
     <span class="menu-item-label">{{ item.label }}</span>
     <span v-if="item.shortcut" class="menu-item-shortcut">{{ item.shortcut }}</span>
     <span v-if="item.children && item.children.length > 0" class="menu-item-arrow">▸</span>
@@ -26,6 +26,7 @@
         :key="child.id"
         :item="child"
         :active-submenu="activeSubmenu"
+        :checked-map="checkedMap"
         @action="(a: string) => $emit('action', a)"
         @submenu="(s: string | null) => $emit('submenu', s)"
       />
@@ -34,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineOptions } from 'vue';
+import { defineOptions, computed } from 'vue';
 import type { MenuItem as MenuItemType } from '../types';
 
 defineOptions({ name: 'MenuItem' });
@@ -42,12 +43,20 @@ defineOptions({ name: 'MenuItem' });
 const props = defineProps<{
   item: MenuItemType;
   activeSubmenu: string | null;
+  checkedMap?: Record<string, boolean>;
 }>();
 
 const emit = defineEmits<{
   action: [action: string];
   submenu: [id: string | null];
 }>();
+
+const isChecked = computed(() => {
+  if (props.item.id && props.checkedMap && props.item.id in props.checkedMap) {
+    return props.checkedMap[props.item.id];
+  }
+  return !!props.item.checked;
+});
 
 function onClick() {
   if (props.item.disabled) return;

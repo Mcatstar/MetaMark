@@ -11,22 +11,31 @@
         v-html="renderBlock(block.raw)"
         @dblclick="startEdit(idx)"
       ></div>
-      <textarea
+      <MonacoEditor
         v-else
-        :ref="(el) => setEditRef(idx, el as HTMLTextAreaElement | null)"
-        v-model="block.raw"
-        @blur="saveEdit(idx)"
-        @keydown.ctrl.enter="saveEdit(idx)"
-        class="inline-edit-area"
-      ></textarea>
+        :ref="(el) => setEditRef(idx, el)"
+        :model-value="block.raw"
+        @update:model-value="(v: string) => onBlockEdit(idx, v)"
+        language="markdown"
+        :theme="editorTheme"
+        :font-size="14"
+        :word-wrap="editor_store.word_wrap ? 'on' : 'off'"
+        line-numbers="off"
+        :minimap="false"
+        auto-height
+        :max-height="maxEditorHeight"
+        @close="stopEdit(idx)"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useEditorStore } from '../store/editor-store';
+import { useThemeStore } from '../store/theme-store';
 import { md } from '../markdown';
+import MonacoEditor from './MonacoEditor.vue';
 
 interface Block {
   raw: string;
@@ -36,9 +45,16 @@ interface Block {
 }
 
 const editor_store = useEditorStore();
+const theme_store = useThemeStore();
 
 const blocks = ref<Block[]>([]);
-const editRefs = ref<(HTMLTextAreaElement | null)[]>([]);
+const editRefs = ref<(typeof MonacoEditor | null)[]>([]);
+
+const editorTheme = computed(() => {
+  if (theme_store.theme === 'dark' || theme_store.theme === 'custom') return 'vs-dark';
+  return 'vs';
+});
+const maxEditorHeight = computed(() => Math.min(400, window.innerHeight * 0.5));
 
 function getBlocks(text: string): Block[] {
   const tokens = md.parse(text, {});
@@ -76,13 +92,9 @@ function getBlocks(text: string): Block[] {
 function rebuildBlocks() {
   const newBlocks = getBlocks(editor_store.source);
   const editMap = new Map<string, boolean>();
-  for (const b of blocks.value) {
-    editMap.set(b.raw, b.editing);
-  }
+  for (const b of blocks.value) editMap.set(b.raw, b.editing);
   for (const b of newBlocks) {
-    if (editMap.has(b.raw)) {
-      b.editing = editMap.get(b.raw)!;
-    }
+    if (editMap.has(b.raw)) b.editing = editMap.get(b.raw)!;
   }
   blocks.value = newBlocks;
 }
@@ -91,32 +103,42 @@ function renderBlock(raw: string): string {
   return md.render(raw);
 }
 
-function setEditRef(idx: number, el: HTMLTextAreaElement | null) {
+function setEditRef(idx: number, el: any) {
   editRefs.value[idx] = el;
+}
+
+function onBlockEdit(idx: number, val: string) {
+  const block = blocks.value[idx];
+  if (block) block.raw = val;
 }
 
 function startEdit(idx: number) {
   const block = blocks.value[idx];
   if (!block) return;
-  for (const b of blocks.value) {
-    if (b.editing && b !== block) {
-      b.editing = false;
+  // Save any currently editing block first
+  for (let i = 0; i < blocks.value.length; i++) {
+    if (blocks.value[i].editing) {
+      blocks.value[i].editing = false;
+      commitBlock(i);
     }
   }
   block.editing = true;
-  nextTick(() => {
-    const el = editRefs.value[idx];
-    if (el) {
-      el.focus();
-      el.select();
-    }
-  });
+  setTimeout(() => {
+    const ref = editRefs.value[idx];
+    if (ref && 'focus' in ref) (ref as any).focus();
+  }, 50);
 }
 
-function saveEdit(idx: number) {
+function stopEdit(idx: number) {
   const block = blocks.value[idx];
   if (!block) return;
   block.editing = false;
+  commitBlock(idx);
+}
+
+function commitBlock(idx: number) {
+  const block = blocks.value[idx];
+  if (!block) return;
   const newSource = blocks.value.map(b => b.raw).join('\n');
   editor_store.set_source(newSource);
 }
@@ -131,36 +153,17 @@ watch(() => editor_store.source, () => {
   flex: 1;
   overflow-y: auto;
   padding: 16px 24px;
-  background: #fff;
 }
-
 .inline-block {
   margin: 2px 0;
 }
-
 .inline-preview {
   padding: 2px 8px;
   border-radius: 4px;
   cursor: text;
   min-height: 1.4em;
 }
-
 .inline-preview:hover {
   background: #f0f4ff;
-}
-
-.inline-edit-area {
-  width: 100%;
-  padding: 6px 8px;
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  border: 2px solid #1976d2;
-  border-radius: 4px;
-  outline: none;
-  resize: vertical;
-  box-sizing: border-box;
-  background: #fff;
-  color: #333;
 }
 </style>

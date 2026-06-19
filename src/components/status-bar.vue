@@ -10,6 +10,9 @@
       <span>行数: {{ lineCount }}</span>
       <span>{{ modeLabel }}</span>
       <span>{{ editor_store.zoom }}%</span>
+      <span class="wrap-toggle" @click="toggleWrap" :title="editor_store.word_wrap ? '点击切换为不换行' : '点击切换为换行'">
+        {{ editor_store.word_wrap ? '换行' : '不换行' }}
+      </span>
     </span>
   </div>
 </template>
@@ -36,6 +39,10 @@ const modeLabel = computed(() => {
     case 'source': return '源码模式';
   }
 });
+
+function toggleWrap() {
+  editor_store.word_wrap = !editor_store.word_wrap;
+}
 </script>
 
 <style scoped>
@@ -63,4 +70,6 @@ const modeLabel = computed(() => {
 .status-right {
   gap: 16px;
 }
+.wrap-toggle { cursor: pointer; text-decoration: underline dotted; }
+.wrap-toggle:hover { color: #1976d2; }
 </style>
